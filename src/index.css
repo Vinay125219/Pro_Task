@@ -1,0 +1,143 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Motivational Color Palette */
+  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --success-gradient: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+  --energy-gradient: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+  --focus-gradient: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+  --inspiration-gradient: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+  
+  /* Text Colors */
+  --text-primary: #2c3e50;
+  --text-secondary: #7f8c8d;
+  --text-accent: #667eea;
+  
+  /* Background Colors */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  
+  /* Shadow */
+  --shadow-soft: 0 4px 20px rgba(102, 126, 234, 0.15);
+  --shadow-hover: 0 8px 30px rgba(102, 126, 234, 0.25);
+  
+  /* Border Radius */
+  --border-radius: 12px;
+  --border-radius-lg: 16px;
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+button:hover {
+  transform: translateY(-2px);
+}
+
+a {
+  color: var(--text-accent);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+a:hover {
+  color: #5a6fd8;
+  text-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+/* Custom Scrollbar Styling - Motivational */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: linear-gradient(135deg, #f1f3f4 0%, #e8eaf6 100%);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-gradient);
+  border-radius: 10px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #5a6fd8 0%, #667eea 100%);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Motivational Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 4px 20px rgba(102, 126, 234, 0.15); }
+  50% { box-shadow: 0 8px 30px rgba(102, 126, 234, 0.35); }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Motivational Helper Classes */
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+.animate-slide-up {
+  animation: slideInUp 0.6s ease-out forwards;
+}
+
+/* Focus and Success States */
+.success-state {
+  background: var(--success-gradient) !important;
+  color: white;
+  font-weight: 600;
+}
+
+.energy-state {
+  background: var(--energy-gradient) !important;
+  color: white;
+  font-weight: 600;
+}
+
+.focus-state {
+  background: var(--focus-gradient) !important;
+  color: white;
+  font-weight: 600;
+}
