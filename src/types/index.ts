@@ -43,15 +43,17 @@ export interface AuthContextType {
 export interface AppContextType {
   projects: Project[];
   tasks: Task[];
-  addProject: (project: Omit<Project, 'id' | 'createdAt' | 'tasks'>) => void;
-  updateProject: (id: string, updates: Partial<Project>) => void;
-  deleteProject: (id: string) => void;
-  addTask: (task: Omit<Task, 'id' | 'createdAt'>) => void;
-  updateTask: (id: string, updates: Partial<Task>) => void;
-  deleteTask: (id: string) => void;
-  startTask: (taskId: string, userId: string) => void;
-  completeTask: (taskId: string, userId: string) => void;
-  assignTask: (taskId: string, assignedUserId: string, assignedByUserId: string) => void;
+  loading: boolean;
+  error: string | null;
+  addProject: (project: Omit<Project, 'id' | 'createdAt' | 'tasks'>) => Promise<void>;
+  updateProject: (id: string, updates: Partial<Project>) => Promise<void>;
+  deleteProject: (id: string) => Promise<void>;
+  addTask: (task: Omit<Task, 'id' | 'createdAt'>) => Promise<void>;
+  updateTask: (id: string, updates: Partial<Task>) => Promise<void>;
+  deleteTask: (id: string) => Promise<void>;
+  startTask: (taskId: string, userId: string) => Promise<void>;
+  completeTask: (taskId: string, userId: string) => Promise<void>;
+  assignTask: (taskId: string, assignedUserId: string) => Promise<void>;
 }
 
 export interface MotivationalQuote {

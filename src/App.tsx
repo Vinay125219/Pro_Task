@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { AppProvider } from './context/AppContext';
 import Login from './components/Auth/Login';
 import Dashboard from './components/Dashboard/Dashboard';
+import { initializeDatabase } from './services/database';
 import './App.css';
 
 const AppContent: React.FC = () => {
@@ -20,6 +21,11 @@ const AppContent: React.FC = () => {
 };
 
 function App() {
+  useEffect(() => {
+    // Initialize database on app start
+    initializeDatabase().catch(console.error);
+  }, []);
+
   return (
     <AuthProvider>
       <AppProvider>
