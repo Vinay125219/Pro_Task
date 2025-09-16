@@ -5,7 +5,45 @@ import type { Project, Task } from '../types/index';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://your-project.supabase.co';
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'your-anon-key';
 
+// Check if environment variables are properly configured
+const isSupabaseConfigured = 
+  supabaseUrl !== 'https://your-project.supabase.co' && 
+  supabaseKey !== 'your-anon-key' &&
+  supabaseUrl.includes('supabase.co') &&
+  supabaseKey.length > 20;
+
+if (!isSupabaseConfigured) {
+  console.warn('⚠️ Supabase environment variables not configured. Using localStorage fallback mode.');
+  console.warn('📝 To enable Supabase, set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY environment variables.');
+} else {
+  console.log('✅ Supabase configuration detected:', supabaseUrl);
+}
+
 export const supabase = createClient(supabaseUrl, supabaseKey);
+
+// Test Supabase connection
+const testSupabaseConnection = async () => {
+  if (!isSupabaseConfigured) {
+    console.log('🔄 Using localStorage fallback mode');
+    return false;
+  }
+
+  try {
+    const { error } = await supabase.from('projects').select('count').limit(1);
+    if (error) {
+      console.error('❌ Supabase connection failed:', error.message);
+      return false;
+    }
+    console.log('✅ Supabase connection successful');
+    return true;
+  } catch (error) {
+    console.error('❌ Supabase connection test failed:', error);
+    return false;
+  }
+};
+
+// Test connection on initialization
+testSupabaseConnection();
 
 // Database table definitions
 export interface Database {
@@ -28,6 +66,12 @@ export interface Database {
 // Projects service
 export const projectsService = {
   async getAll(): Promise<Project[]> {
+    // Skip Supabase if not configured
+    if (!isSupabaseConfigured) {
+      const localProjects = localStorage.getItem('task_manager_shared_projects');
+      return localProjects ? JSON.parse(localProjects) : [];
+    }
+
     try {
       const { data, error } = await supabase
         .from('projects')
@@ -35,7 +79,7 @@ export const projectsService = {
         .order('createdAt', { ascending: false });
       
       if (error) {
-        console.error('Error fetching projects:', error);
+        console.error('❌ Error fetching projects:', error);
         // Fallback to localStorage
         const localProjects = localStorage.getItem('task_manager_shared_projects');
         return localProjects ? JSON.parse(localProjects) : [];
@@ -44,7 +88,7 @@ export const projectsService = {
       // Add tasks array for compatibility with existing code
       return (data || []).map(project => ({ ...project, tasks: [] }));
     } catch (error) {
-      console.error('Projects service error:', error);
+      console.error('❌ Projects service error:', error);
       // Fallback to localStorage
       const localProjects = localStorage.getItem('task_manager_shared_projects');
       return localProjects ? JSON.parse(localProjects) : [];
@@ -147,6 +191,12 @@ export const projectsService = {
 // Tasks service
 export const tasksService = {
   async getAll(): Promise<Task[]> {
+    // Skip Supabase if not configured
+    if (!isSupabaseConfigured) {
+      const localTasks = localStorage.getItem('task_manager_shared_tasks');
+      return localTasks ? JSON.parse(localTasks) : [];
+    }
+
     try {
       const { data, error } = await supabase
         .from('tasks')
@@ -154,7 +204,7 @@ export const tasksService = {
         .order('createdAt', { ascending: false });
       
       if (error) {
-        console.error('Error fetching tasks:', error);
+        console.error('❌ Error fetching tasks:', error);
         // Fallback to localStorage
         const localTasks = localStorage.getItem('task_manager_shared_tasks');
         return localTasks ? JSON.parse(localTasks) : [];
@@ -162,7 +212,7 @@ export const tasksService = {
       
       return data || [];
     } catch (error) {
-      console.error('Tasks service error:', error);
+      console.error('❌ Tasks service error:', error);
       // Fallback to localStorage
       const localTasks = localStorage.getItem('task_manager_shared_tasks');
       return localTasks ? JSON.parse(localTasks) : [];
@@ -266,6 +316,15 @@ export const tasksService = {
 
 // Real-time subscriptions
 export const subscribeToProjects = (callback: (payload: any) => void) => {
+  if (!isSupabaseConfigured) {
+    console.log('🔄 Real-time subscriptions disabled - using localStorage mode');
+    // Return a mock subscription that does nothing
+    return {
+      unsubscribe: () => {},
+      subscribe: () => ({})
+    };
+  }
+
   return supabase
     .channel('projects')
     .on('postgres_changes', 
@@ -276,6 +335,15 @@ export const subscribeToProjects = (callback: (payload: any) => void) => {
 };
 
 export const subscribeToTasks = (callback: (payload: any) => void) => {
+  if (!isSupabaseConfigured) {
+    console.log('🔄 Real-time subscriptions disabled - using localStorage mode');
+    // Return a mock subscription that does nothing
+    return {
+      unsubscribe: () => {},
+      subscribe: () => ({})
+    };
+  }
+
   return supabase
     .channel('tasks')
     .on('postgres_changes', 
