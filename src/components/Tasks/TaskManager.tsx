@@ -14,8 +14,7 @@ const TaskManager: React.FC = () => {
     updateTask, 
     deleteTask, 
     startTask, 
-    completeTask,
-    assignTask
+    completeTask
   } = useApp();
   
   const [isCreating, setIsCreating] = useState(false);

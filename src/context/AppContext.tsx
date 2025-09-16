@@ -118,7 +118,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     }));
   };
 
-  const assignTask = (taskId: string, assignedUserId: string, assignedByUserId: string) => {
+  const assignTask = (taskId: string, assignedUserId: string) => {
     setTasks(prev => prev.map(task => {
       // Anyone can assign any task
       if (task.id === taskId) {

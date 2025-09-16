@@ -17,8 +17,7 @@ const Dashboard: React.FC = () => {
     updateTask, 
     deleteTask,
     startTask,
-    completeTask,
-    assignTask
+    completeTask
   } = useApp();
   
   const [quote, setQuote] = useState<MotivationalQuote>({ text: '', author: '' });
@@ -259,11 +258,7 @@ const Dashboard: React.FC = () => {
     ].filter(user => user.id !== currentUser?.id);
   };
 
-  const handleAssignTask = (taskId: string, assignedUserId: string) => {
-    if (currentUser) {
-      assignTask(taskId, assignedUserId, currentUser.id);
-    }
-  };
+
 
   // Enhanced task filtering and sorting
   const getFilteredAndSortedTasks = () => {
