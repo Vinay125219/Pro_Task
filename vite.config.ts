@@ -9,19 +9,7 @@ export default defineConfig({
     outDir: 'dist',
     assetsDir: 'assets',
     sourcemap: false,
-    target: 'esnext',
-    minify: 'esbuild',
-    rollupOptions: {
-      external: [],
-      output: {
-        manualChunks: undefined,
-      },
-    },
-  },
-  esbuild: {
-    target: 'esnext'
-  },
-  define: {
-    global: 'globalThis'
+    target: 'es2015',
+    minify: 'esbuild'
   }
 })
