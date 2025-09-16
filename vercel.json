@@ -6,11 +6,22 @@
   "installCommand": "npm install --omit=optional",
   "routes": [
     {
-      "src": "/assets/(.*)",
+      "src": "/assets/(.*\\.css)",
+      "dest": "/assets/$1",
+      "headers": {
+        "Content-Type": "text/css; charset=utf-8"
+      }
+    },
+    {
+      "src": "/assets/(.*\\.(js|mjs))",
       "dest": "/assets/$1",
       "headers": {
         "Content-Type": "application/javascript; charset=utf-8"
       }
+    },
+    {
+      "src": "/assets/(.*)",
+      "dest": "/assets/$1"
     },
     {
       "src": "/(.*\\.(js|mjs))",
