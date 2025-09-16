@@ -220,21 +220,37 @@ export const tasksService = {
   },
 
   async create(task: Omit<Task, 'id' | 'createdAt'>): Promise<Task | null> {
-    try {
-      const newTask = {
-        title: task.title,
-        description: task.description,
-        projectId: task.projectId,
-        createdBy: task.createdBy,
-        assignedTo: task.assignedTo,
-        startedBy: task.startedBy,
-        completedBy: task.completedBy,
-        startedAt: task.startedAt,
-        completedAt: task.completedAt,
-        status: task.status,
-        priority: task.priority,
-        dueDate: task.dueDate
+    // Skip Supabase if not configured
+    if (!isSupabaseConfigured) {
+      const localTask = {
+        ...task,
+        id: Date.now().toString(),
+        createdAt: new Date().toISOString()
       };
+      const localTasks = JSON.parse(localStorage.getItem('task_manager_shared_tasks') || '[]');
+      localTasks.push(localTask);
+      localStorage.setItem('task_manager_shared_tasks', JSON.stringify(localTasks));
+      return localTask;
+    }
+
+    try {
+      // Clean the task object to only include valid database columns
+      const newTask = {
+        title: task.title || '',
+        description: task.description || '',
+        projectId: task.projectId || '',
+        createdBy: task.createdBy || '',
+        assignedTo: task.assignedTo || null,
+        startedBy: task.startedBy || null,
+        completedBy: task.completedBy || null,
+        startedAt: task.startedAt || null,
+        completedAt: task.completedAt || null,
+        status: task.status || 'pending',
+        priority: task.priority || 'medium',
+        dueDate: task.dueDate || null
+      };
+
+      console.log('🔄 Creating task with data:', newTask);
 
       const { data, error } = await supabase
         .from('tasks')
@@ -243,12 +259,19 @@ export const tasksService = {
         .single();
 
       if (error) {
-        console.error('Error creating task:', error);
+        console.error('❌ Error creating task:', error);
+        console.error('❌ Error details:', error.details, error.hint, error.message);
         // Fallback to localStorage
-        const localTask = {
+        const localTask: Task = {
           ...newTask,
           id: Date.now().toString(),
-          createdAt: new Date().toISOString()
+          createdAt: new Date().toISOString(),
+          assignedTo: newTask.assignedTo || undefined,
+          startedBy: newTask.startedBy || undefined,
+          completedBy: newTask.completedBy || undefined,
+          startedAt: newTask.startedAt || undefined,
+          completedAt: newTask.completedAt || undefined,
+          dueDate: newTask.dueDate || undefined
         };
         const localTasks = JSON.parse(localStorage.getItem('task_manager_shared_tasks') || '[]');
         localTasks.push(localTask);
@@ -256,9 +279,10 @@ export const tasksService = {
         return localTask;
       }
 
+      console.log('✅ Task created successfully:', data);
       return data;
     } catch (error) {
-      console.error('Tasks service error:', error);
+      console.error('❌ Tasks service error:', error);
       return null;
     }
   },

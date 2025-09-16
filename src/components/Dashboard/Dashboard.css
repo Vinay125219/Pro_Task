@@ -1,3 +1,4 @@
+/* Enhanced Dashboard Styles with Better Responsiveness */
 .dashboard {
   min-height: 100vh;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
@@ -16,12 +17,14 @@
 }
 
 .header-content {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 0 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
 }
 
 .header-content h1 {
@@ -127,9 +130,270 @@
 }
 
 .dashboard-content {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 30px 20px;
+}
+
+/* Enhanced Mobile Responsiveness */
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+  
+  .header-content h1 {
+    font-size: 1.5rem;
+  }
+  
+  .main-nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  .nav-btn {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+  }
+  
+  .dashboard-content {
+    padding: 20px 15px;
+  }
+  
+  .dashboard-tabs {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .export-buttons {
+    margin-left: 0;
+    margin-top: 10px;
+    justify-content: center;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .stat-card {
+    padding: 20px;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .quick-action-btn {
+    padding: 16px 20px;
+    font-size: 1rem;
+  }
+  
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .modal {
+    margin: 10px;
+    max-width: calc(100vw - 20px);
+  }
+  
+  .modal-actions {
+    flex-direction: column;
+  }
+  
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+  }
+  
+  .profile-stats {
+    grid-template-columns: 1fr;
+  }
+  
+  .export-options {
+    flex-direction: column;
+  }
+  
+  .task-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .task-title {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .task-actions {
+    align-self: flex-end;
+    flex-wrap: wrap;
+  }
+  
+  .task-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .timeline-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .timeline-item .date {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-content {
+    padding: 15px 10px;
+  }
+  
+  .stat-card {
+    padding: 15px;
+  }
+  
+  .stat-icon {
+    font-size: 2rem;
+  }
+  
+  .stat-number {
+    font-size: 2rem;
+  }
+  
+  .quick-action-btn {
+    padding: 14px 18px;
+    font-size: 0.9rem;
+  }
+  
+  .modal {
+    margin: 5px;
+    max-width: calc(100vw - 10px);
+  }
+  
+  .task-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .task-actions {
+    align-self: stretch;
+    justify-content: flex-end;
+  }
+  
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+}
+
+/* Enhanced animations for better UX */
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.stat-card {
+  animation: slideInFromBottom 0.5s ease-out;
+  animation-delay: calc(var(--animation-delay, 0) * 0.1s);
+  animation-fill-mode: both;
+}
+
+.project-card,
+.task-card {
+  animation: slideInFromLeft 0.4s ease-out;
+  animation-fill-mode: both;
+}
+
+.modal {
+  animation: slideInFromTop 0.3s ease-out;
+}
+
+/* Improved focus states for accessibility */
+.nav-btn:focus,
+.quick-action-btn:focus,
+.action-btn:focus,
+.submit-btn:focus,
+.cancel-btn:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Better loading states */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+  position: relative;
+}
+
+.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid #667eea;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Dashboard Tabs */
