@@ -1,6 +1,6 @@
--- AchieveFlow Pro Database Schema - Production Ready
+-- AchieveFlow Pro Database Schema - FIXED for Case Sensitivity
 -- Execute this script in Supabase SQL Editor
--- Copy and paste this entire script and run it
+-- This script fixes the PostgreSQL case sensitivity issue
 
 -- Clean up existing tables (if needed)
 DROP TABLE IF EXISTS tasks
@@ -8,40 +8,40 @@ CASCADE;
 DROP TABLE IF EXISTS projects
 CASCADE;
 
--- Create projects table
+-- Create projects table with proper quoted identifiers
 CREATE TABLE projects
 (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     name TEXT NOT NULL,
     description TEXT,
-    createdBy TEXT NOT NULL,
-    createdAt TIMESTAMP
+    "createdBy" TEXT NOT NULL,
+    "createdAt" TIMESTAMP
     WITH TIME ZONE DEFAULT NOW
     (),
   status TEXT NOT NULL DEFAULT 'active'
 );
 
-    -- Create tasks table
+    -- Create tasks table with proper quoted identifiers
     CREATE TABLE tasks
     (
         id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
         title TEXT NOT NULL,
         description TEXT,
-        projectId TEXT NOT NULL,
-        createdBy TEXT NOT NULL,
-        assignedTo TEXT,
-        startedBy TEXT,
-        completedBy TEXT,
-        createdAt TIMESTAMP
+        "projectId" TEXT NOT NULL,
+        "createdBy" TEXT NOT NULL,
+        "assignedTo" TEXT,
+        "startedBy" TEXT,
+        "completedBy" TEXT,
+        "createdAt" TIMESTAMP
         WITH TIME ZONE DEFAULT NOW
         (),
-  startedAt TIMESTAMP
+  "startedAt" TIMESTAMP
         WITH TIME ZONE,
-  completedAt TIMESTAMP
+  "completedAt" TIMESTAMP
         WITH TIME ZONE,
   status TEXT NOT NULL DEFAULT 'pending',
   priority TEXT NOT NULL DEFAULT 'medium',
-  dueDate TIMESTAMP
+  "dueDate" TIMESTAMP
         WITH TIME ZONE
 );
 
@@ -70,27 +70,30 @@ CHECK (priority IN ('low', 'medium', 'high'));
         (true) WITH CHECK
         (true);
 
-        -- Create performance indexes
-        CREATE INDEX idx_projects_created_at ON projects(createdAt DESC);
+        -- Create performance indexes with quoted identifiers
+        CREATE INDEX idx_projects_created_at ON projects("createdAt" DESC);
         CREATE INDEX idx_projects_status ON projects(status);
-        CREATE INDEX idx_tasks_created_at ON tasks(createdAt DESC);
-        CREATE INDEX idx_tasks_project_id ON tasks(projectId);
-        CREATE INDEX idx_tasks_status ON tasks(status);
-        CREATE INDEX idx_tasks_assigned_to ON tasks(assignedTo);
-        CREATE INDEX idx_tasks_priority ON tasks(priority);
+        CREATE INDEX idx_projects_created_by ON projects("createdBy");
 
-        -- Insert sample data
+        CREATE INDEX idx_tasks_created_at ON tasks("createdAt" DESC);
+        CREATE INDEX idx_tasks_project_id ON tasks("projectId");
+        CREATE INDEX idx_tasks_status ON tasks(status);
+        CREATE INDEX idx_tasks_assigned_to ON tasks("assignedTo");
+        CREATE INDEX idx_tasks_priority ON tasks(priority);
+        CREATE INDEX idx_tasks_created_by ON tasks("createdBy");
+
+        -- Insert sample data with quoted identifiers
         INSERT INTO projects
-            (name, description, createdBy, status)
+            (name, description, "createdBy", status)
         VALUES
             ('🚀 Welcome to AchieveFlow Pro', 'Your journey to productivity starts here! This project contains sample tasks to get you started.', 'vinay', 'active'),
             ('📈 Personal Development', 'Track your growth and self-improvement goals', 'ravali', 'active')
         ON CONFLICT
         (id) DO NOTHING;
 
-        -- Insert sample tasks
+        -- Insert sample tasks with quoted identifiers
         INSERT INTO tasks
-            (title, description, projectId, createdBy, status, priority, assignedTo)
+            (title, description, "projectId", "createdBy", status, priority, "assignedTo")
         SELECT
             '✨ Complete Your Profile',
             'Add your personal information and customize your dashboard settings',
@@ -106,7 +109,7 @@ ON CONFLICT
         (id) DO NOTHING;
 
         INSERT INTO tasks
-            (title, description, projectId, createdBy, status, priority, assignedTo, dueDate)
+            (title, description, "projectId", "createdBy", status, priority, "assignedTo", "dueDate")
         SELECT
             '🎯 Create Your First Project',
             'Start building something amazing by creating your first custom project',
@@ -123,7 +126,7 @@ ON CONFLICT
         (id) DO NOTHING;
 
         INSERT INTO tasks
-            (title, description, projectId, createdBy, status, priority, assignedTo)
+            (title, description, "projectId", "createdBy", status, priority, "assignedTo")
         SELECT
             '📚 Learn Advanced Features',
             'Explore task assignments, priorities, and collaboration features',
@@ -143,3 +146,18 @@ ON CONFLICT
         FROM projects;
         SELECT 'Tasks created:' as message, COUNT(*) as count
         FROM tasks;
+
+        -- Test the schema matches our JavaScript expectations
+        SELECT
+            column_name,
+            data_type
+        FROM information_schema.columns
+        WHERE table_name = 'projects'
+        ORDER BY ordinal_position;
+
+        SELECT
+            column_name,
+            data_type
+        FROM information_schema.columns
+        WHERE table_name = 'tasks'
+        ORDER BY ordinal_position;
